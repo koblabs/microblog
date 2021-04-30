@@ -103,7 +103,6 @@ class  User(UserMixin, CRUDMixin, CreateUpdateTimesMixin, db.Model):
         )
 
 
-
 class Post(CRUDMixin, CreateUpdateTimesMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
