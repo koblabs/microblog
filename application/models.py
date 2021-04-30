@@ -96,9 +96,9 @@ class  User(UserMixin, CRUDMixin, CreateUpdateTimesMixin, db.Model):
 
         my_following_posts = Post.query.join(
             followers, (followers.c.following_id == Post.user_id)
-        ).filter(followers.c.following_id == self.id)
+        ).filter(followers.c.follower_id == self.id)
 
-        my_posts.union(my_following_posts).order_by(
+        return my_posts.union(my_following_posts).order_by(
             Post.created_on.desc()
         )
 
