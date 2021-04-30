@@ -7,6 +7,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from application import db, login
 
 
+followers = db.Table("followers",
+    db.Column("follower_id", db.Integer, db.ForeignKey("user.id")),
+    db.Column("following_id", db.Integer, db.ForeignKey("user.id"))
+)
+
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -51,6 +57,13 @@ class  User(UserMixin, CRUDMixin, CreateUpdateTimesMixin, db.Model):
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     posts = db.relationship("Post", backref="author", lazy="dynamic")
+    following = db.relationship(
+        "User", secondary=followers,
+        primaryjoin=(followers.c.follower_id == id),
+        secondaryjoin=(followers.c.following_id == id),
+        backref=db.backref("followers", lazy="dynamic"),
+        lazy="dynamic"
+    )
 
     def __repr__(self):
         return f"<User {self.username}>"
@@ -64,6 +77,31 @@ class  User(UserMixin, CRUDMixin, CreateUpdateTimesMixin, db.Model):
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return f"https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}"
+
+    def is_following(self, user):
+        return self.following.filter(
+            followers.c.following_id == user.id
+        ).count() > 0
+
+    def follow(self, user):
+        if not self.is_following(user):
+            self.following.append(user)
+
+    def unfollow(self, user):
+        if self.is_following(user):
+            self.following.remove(user)
+
+    def following_posts(self):
+        my_posts = Post.query.filter_by(user_id=self.id)
+
+        my_following_posts = Post.query.join(
+            followers, (followers.c.following_id == Post.user_id)
+        ).filter(followers.c.following_id == self.id)
+
+        my_posts.union(my_following_posts).order_by(
+            Post.created_on.desc()
+        )
+
 
 
 class Post(CRUDMixin, CreateUpdateTimesMixin, db.Model):
