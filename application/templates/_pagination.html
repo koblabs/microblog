@@ -1,6 +1,14 @@
-{% if prev_page %}
-<a href="{{ prev_page }}">Newer posts</a>
-{% endif %}
-{% if next_page %}
-<a href="{{ next_page }}">Older posts</a>
-{% endif %}
+<nav aria-label="...">
+    <ul class="pager">
+        <li class="previous{% if not prev_page %} disabled{% endif %}">
+            <a href="{{ prev_page or '#' }}">
+                <span aria-hidden="true">&larr;</span> Newer posts
+            </a>
+        </li>
+        <li class="next{% if not next_page %} disabled{% endif %}">
+            <a href="{{ next_page or '#' }}">
+                Older posts <span aria-hidden="true">&rarr;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
