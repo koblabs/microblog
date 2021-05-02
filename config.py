@@ -18,3 +18,6 @@ class Config(object):
     ADMINS = environ.get("MAIL_ADMINS") or ["koowusuboaky@gmail.com"]
 
     POSTS_PER_PAGE = 10
+
+    LANGUAGES = ['en', 'es']
+    #LANGUAGES = [en-US, en-GB, en-CA]
