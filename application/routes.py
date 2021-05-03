@@ -29,8 +29,8 @@ def index():
     form = PostForm()
     if form.validate_on_submit():
         language = guess_language(form.post.data)
-        if language == 'UNKNOWN' or len(language) > 5:
-            language = ''
+        if language == "UNKNOWN" or len(language) > 5:
+            language = ""
         post = Post(body=form.post.data, author=current_user,
                     language=language)
         post.save()
