@@ -17,6 +17,6 @@ def send_mail(subject, sender, recipients, body, html):
     message.body = body
     message.html = html
     # mail.send(message)
-    print(body)
+    # print(body)
     Thread(target=send_async_email, 
             args=(current_app._get_current_object(), message)).start()
