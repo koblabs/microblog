@@ -22,5 +22,5 @@ class Config(object):
     LANGUAGES = ['en', 'es']
     #LANGUAGES = [en-US, en-GB, en-CA]
 
-    MS_TRANSLATOR_KEY = environ.get("MS_TRANSLATOR_KEY")
+    MS_TRANSLATOR_KEY = environ.get("MS_TRANSLATOR_KEY") or "49051808b7cf456ab7b8c0d08daa2ddf"
     MS_TRANSLATOR_REGION = environ.get("MS_TRANSLATOR_REGION") or "eastus2"
