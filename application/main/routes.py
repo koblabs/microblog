@@ -25,7 +25,6 @@ def before_request():
 @bp.route("/translate", methods=["POST", "GET"])
 @login_required
 def translate_text():
-    print("IN")
     text = translate(request.form["text"],
                         request.form["src_language"],
                         request.form["dest_language"])
