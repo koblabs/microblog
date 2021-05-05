@@ -26,3 +26,6 @@ class Config(object):
 
     MS_TRANSLATOR_KEY = environ.get("MS_TRANSLATOR_KEY")
     MS_TRANSLATOR_REGION = environ.get("MS_TRANSLATOR_REGION") or "eastus2"
+
+    ELASTICSEARCH_URL = environ.get("ELASTICSEARCH_URL")
+
