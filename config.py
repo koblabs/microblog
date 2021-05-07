@@ -8,7 +8,7 @@ class Config(object):
     SECRET_KEY = environ.get("SECRET_KEY") or "secret_key"
     JWT_ALGORITHM = environ.get("JWT_ALGORITHM") or "HS256"
     
-    SQLALCHEMY_DATABASE_URI = environ.get("DATABASE_URI") or \
+    SQLALCHEMY_DATABASE_URL = environ.get("DATABASE_URL") or \
         f"sqlite:///{path.join(basedir, 'app.db')}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -28,4 +28,7 @@ class Config(object):
     MS_TRANSLATOR_REGION = environ.get("MS_TRANSLATOR_REGION") or "eastus2"
 
     ELASTICSEARCH_URL = environ.get("ELASTICSEARCH_URL")
+
+    LOG_TO_STDOUT = environ.get("LOG_TO_STDOUT")
+
 
