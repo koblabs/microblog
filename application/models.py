@@ -168,6 +168,11 @@ class  User(UserMixin, CRUDMixin, CreateUpdateTimesMixin, db.Model):
             return
         return User.query.get(id)
 
+    def new_message(self):
+        last_read = self.messages_last_read or datetime(1900, 1, 1)
+        return Message.query.filter_by(recipient=self).filter(
+            Message.created_on > last_read).count()
+
 
 class Post(CRUDMixin, CreateUpdateTimesMixin, SearchableMixin, db.Model):
     __searchable__ = ['body']
