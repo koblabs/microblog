@@ -54,6 +54,45 @@ class CreateUpdateTimesMixin(object):
                            onupdate=datetime.utcnow)
 
 
+class SearchableMixin(object):
+    @classmethod
+    def search(cls, expression, page, per_page):
+        ids, total = query_index(cls.__tablename__, expression, page, per_page)
+        if total == 0:
+            return cls.query.filter_by(id=0), 0
+        when = []
+        for i in range(len(ids)):
+            when.append((ids[i], i))
+        return cls.query.filter(cls.id.in_(ids)).order_by(
+            db.case(when, value=cls.id)), total
+
+    @classmethod
+    def before_commit(cls, session):
+        session._changes = {
+            "add": list(session.new),
+            "update": list(session.dirty),
+            "delete": list(session.deleted)
+        }
+
+    @classmethod
+    def after_commit(cls, session):
+        for obj in session._changes["add"]:
+            if isinstance(obj, SearchableMixin):
+                add_to_index(obj.__tablename__, obj)
+        for obj in session._changes["update"]:
+            if isinstance(obj, SearchableMixin):
+                add_to_index(obj.__tablename__. obj)
+        for obj in session._changes["delete"]:
+            if isinstance(obj, SearchableMixin):
+                remove_from_index(obj.__tablename__, obj)
+        session._changes = None
+
+    @classmethod
+    def reindex(cls):
+        for obj in cls.query:
+            add_to_index(cls.___tablename__, obj)
+
+
 class  User(UserMixin, CRUDMixin, CreateUpdateTimesMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(16), index=True, unique=True)
@@ -62,13 +101,18 @@ class  User(UserMixin, CRUDMixin, CreateUpdateTimesMixin, db.Model):
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     posts = db.relationship("Post", backref="author", lazy="dynamic")
-    following = db.relationship(
-        "User", secondary=followers,
-        primaryjoin=(followers.c.follower_id == id),
-        secondaryjoin=(followers.c.following_id == id),
-        backref=db.backref("followers", lazy="dynamic"),
-        lazy="dynamic"
-    )
+    following = db.relationship("User", secondary=followers,
+                                primaryjoin=(followers.c.follower_id == id),
+                                secondaryjoin=(followers.c.following_id == id),
+                                backref=db.backref("followers", lazy="dynamic"),
+                                lazy="dynamic")
+    messages_sent = db.relationship("Message", 
+                                    foreign_keys="Message.sender_id",
+                                    backref="author", lazy="dynamic")
+    messages_received = db.relationship("Message", 
+                                        foreign_keys="Message.receipient_id",
+                                        backref="receipient", lazy="dynamic")
+    message_last_read = db.Column(db.DateTime)
 
     def __repr__(self):
         return f"<User {self.username}>"
@@ -111,59 +155,18 @@ class  User(UserMixin, CRUDMixin, CreateUpdateTimesMixin, db.Model):
         return jwt.encode(
             {"reset_password": self.id, "exp": time() + span},
             current_app.config["SECRET_KEY"], 
-            algorithm=current_app.config["JWT_ALGORITHM"]
-        )
+            algorithm=current_app.config["JWT_ALGORITHM"])
 
     @staticmethod
     def verify_reset_password_token(token):
         try:
             id = jwt.decode(
-                token,
-                current_app.config["SECRET_KEY"],
+                token, current_app.config["SECRET_KEY"],
                 algorithms=current_app.config["JWT_ALGORITHM"]
-            )["reset_password"]
+                )["reset_password"]
         except:
             return
         return User.query.get(id)
-
-
-class SearchableMixin(object):
-    @classmethod
-    def search(cls, expression, page, per_page):
-        ids, total = query_index(cls.__tablename__, expression, page, per_page)
-        if total == 0:
-            return cls.query.filter_by(id=0), 0
-        when = []
-        for i in range(len(ids)):
-            when.append((ids[i], i))
-        return cls.query.filter(cls.id.in_(ids)).order_by(
-            db.case(when, value=cls.id)), total
-
-    @classmethod
-    def before_commit(cls, session):
-        session._changes = {
-            "add": list(session.new),
-            "update": list(session.dirty),
-            "delete": list(session.deleted)
-        }
-
-    @classmethod
-    def after_commit(cls, session):
-        for obj in session._changes["add"]:
-            if isinstance(obj, SearchableMixin):
-                add_to_index(obj.__tablename__, obj)
-        for obj in session._changes["update"]:
-            if isinstance(obj, SearchableMixin):
-                add_to_index(obj.__tablename__. obj)
-        for obj in session._changes["delete"]:
-            if isinstance(obj, SearchableMixin):
-                remove_from_index(obj.__tablename__, obj)
-        session._changes = None
-
-    @classmethod
-    def reindex(cls):
-        for obj in cls.query:
-            add_to_index(cls.___tablename__, obj)
 
 
 class Post(CRUDMixin, CreateUpdateTimesMixin, SearchableMixin, db.Model):
@@ -176,6 +179,16 @@ class Post(CRUDMixin, CreateUpdateTimesMixin, SearchableMixin, db.Model):
 
     def __repr__(self):
         return f"<Post {self.body}>"
+
+
+class Message(CRUDMixin, CreateUpdateTimesMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    receipient_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    body = db.Column(db.String(140))
+
+    def __repr__(self):
+        return f"<Message {self.body}"
 
 
 db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
