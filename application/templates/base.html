@@ -75,5 +75,44 @@
                 $(dest).text("{{ _('Error: Could not contact server.') }}");
             });
         }
+
+        $(function() {
+            let xhr = null;
+            let timer = null;
+            $(".user_popup").hover(
+                function(event) {
+                    let element = $(event.currentTarget);
+                    timer = setTimeout(function() {
+                        timer = null;
+                        xhr = $.ajax(
+                            "/user/" + element.text().trim() + "/popup"
+                        ).done(function(data) {
+                            xhr = null;
+                            element.popover({
+                                trigger: "manual",
+                                html: true,
+                                animation: false,
+                                container: element,
+                                content: data
+                            }).popover("show");
+                            flask_moment_render_all();
+                        });
+                    }, 250)
+                },
+                function(event) {
+                    let element = $(event.currentTarget);
+                    if (timer) {
+                        clearTimeout(timer);
+                        timer = null;
+
+                    } else if (xhr) {
+                        xhr.abort();
+                        xhr = null;
+                    } else {
+                        element.popover("destroy");
+                    }
+                }
+            )
+        })
     </script>
 {% endblock %}

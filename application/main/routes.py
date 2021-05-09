@@ -9,7 +9,7 @@ from werkzeug.urls import url_parse
 
 from application import db
 from application.main.forms import EditProfileForm, PostForm, \
-    FollowUnfollowForm, SearchForm
+    EmptyForm, SearchForm
 from application.translate import translate
 from application.models import User, Post
 from application.main import bp
@@ -80,7 +80,7 @@ def index():
 @bp.route("/user/<username>")
 @login_required
 def user(username):
-    user = User.query.filter_by(username=username).first_or_404()    
+    user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get("page", 1, type=int)
     posts = user.posts.order_by(Post.created_on.desc()).paginate(
         page, current_app.config['POSTS_PER_PAGE'], False)
@@ -88,7 +88,7 @@ def user(username):
         if posts.has_next else None
     prev_page = url_for("main.user", username=user.username, page=posts.prev_num) \
         if posts.has_prev else None
-    form = FollowUnfollowForm()
+    form = EmptyForm()
     return render_template("user.html", user=user, form=form,
                             posts=posts.items, next_page=next_page,
                             prev_page=prev_page)
@@ -114,7 +114,7 @@ def edit_profile():
 @bp.route("/follow/<username>", methods=["POST"])
 @login_required
 def follow(username):
-    form = FollowUnfollowForm()
+    form = EmptyForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=username).first()
         if user is None:
@@ -134,7 +134,7 @@ def follow(username):
 @bp.route("/unfollow/<username>", methods=["POST"])
 @login_required
 def unfollow(username):
-    form = FollowUnfollowForm()
+    form = EmptyForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=username).first()
         if user is None:
@@ -151,7 +151,7 @@ def unfollow(username):
         return redirect(url_for("main.index"))
 
 
-@bp.route('/explore')
+@bp.route("/explore")
 @login_required
 def explore():
     page = request.args.get("page", 1, type=int)
@@ -163,3 +163,12 @@ def explore():
         if posts.has_prev else None
     return render_template("index.html", title=_('Explore'), posts=posts.items,
                             next_page=next_page, prev_page=prev_page)
+
+
+@bp.route("/user/<username>/popup")
+@login_required
+def user_pop(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    print(user)
+    form = EmptyForm()
+    return render_template("user_popup.html", user=user, form=form)
