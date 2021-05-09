@@ -110,8 +110,8 @@ class  User(UserMixin, CRUDMixin, CreateUpdateTimesMixin, db.Model):
                                     foreign_keys="Message.sender_id",
                                     backref="author", lazy="dynamic")
     messages_received = db.relationship("Message", 
-                                        foreign_keys="Message.receipient_id",
-                                        backref="receipient", lazy="dynamic")
+                                        foreign_keys="Message.recipient_id",
+                                        backref="recipient", lazy="dynamic")
     messages_last_read = db.Column(db.DateTime)
 
     def __repr__(self):
@@ -184,7 +184,7 @@ class Post(CRUDMixin, CreateUpdateTimesMixin, SearchableMixin, db.Model):
 class Message(CRUDMixin, CreateUpdateTimesMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    receipient_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    recipient_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     body = db.Column(db.String(140))
 
     def __repr__(self):
