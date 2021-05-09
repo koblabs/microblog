@@ -34,7 +34,7 @@ class EditProfileForm(FlaskForm):
             if user is not None:
                 raise ValidationError(_("Username already taken"))
 
-class FollowUnfollowForm(FlaskForm):
+class EmptyForm(FlaskForm):
     submit = SubmitField("Submit")
 
 
