@@ -1,8 +1,8 @@
-"""db reset
+"""db init
 
-Revision ID: a8c23362e8ea
+Revision ID: d72327823d20
 Revises: 
-Create Date: 2021-05-03 11:56:54.318626
+Create Date: 2021-05-09 00:52:18.982377
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a8c23362e8ea'
+revision = 'd72327823d20'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,6 +27,7 @@ def upgrade():
     sa.Column('password', sa.String(length=64), nullable=True),
     sa.Column('about_me', sa.String(length=140), nullable=True),
     sa.Column('last_seen', sa.DateTime(), nullable=True),
+    sa.Column('messages_last_read', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_user_created_on'), 'user', ['created_on'], unique=False)
@@ -39,6 +40,19 @@ def upgrade():
     sa.ForeignKeyConstraint(['follower_id'], ['user.id'], ),
     sa.ForeignKeyConstraint(['following_id'], ['user.id'], )
     )
+    op.create_table('message',
+    sa.Column('created_on', sa.DateTime(), nullable=True),
+    sa.Column('updated_on', sa.DateTime(), nullable=True),
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('sender_id', sa.Integer(), nullable=True),
+    sa.Column('receipient_id', sa.Integer(), nullable=True),
+    sa.Column('body', sa.String(length=140), nullable=True),
+    sa.ForeignKeyConstraint(['receipient_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['sender_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_message_created_on'), 'message', ['created_on'], unique=False)
+    op.create_index(op.f('ix_message_updated_on'), 'message', ['updated_on'], unique=False)
     op.create_table('post',
     sa.Column('created_on', sa.DateTime(), nullable=True),
     sa.Column('updated_on', sa.DateTime(), nullable=True),
@@ -59,6 +73,9 @@ def downgrade():
     op.drop_index(op.f('ix_post_updated_on'), table_name='post')
     op.drop_index(op.f('ix_post_created_on'), table_name='post')
     op.drop_table('post')
+    op.drop_index(op.f('ix_message_updated_on'), table_name='message')
+    op.drop_index(op.f('ix_message_created_on'), table_name='message')
+    op.drop_table('message')
     op.drop_table('followers')
     op.drop_index(op.f('ix_user_username'), table_name='user')
     op.drop_index(op.f('ix_user_updated_on'), table_name='user')

@@ -112,7 +112,7 @@ class  User(UserMixin, CRUDMixin, CreateUpdateTimesMixin, db.Model):
     messages_received = db.relationship("Message", 
                                         foreign_keys="Message.receipient_id",
                                         backref="receipient", lazy="dynamic")
-    message_last_read = db.Column(db.DateTime)
+    messages_last_read = db.Column(db.DateTime)
 
     def __repr__(self):
         return f"<User {self.username}>"
