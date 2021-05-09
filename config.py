@@ -20,6 +20,7 @@ class Config(object):
     ADMINS = environ.get("MAIL_ADMINS") or ["koowusuboaky@gmail.com"]
 
     POSTS_PER_PAGE = 10
+    MESSAGES_PER_PAGE = 15
 
     LANGUAGES = ['en', 'es']
     #LANGUAGES = [en-US, en-GB, en-CA]
@@ -30,5 +31,3 @@ class Config(object):
     ELASTICSEARCH_URL = environ.get("ELASTICSEARCH_URL")
 
     LOG_TO_STDOUT = environ.get("LOG_TO_STDOUT")
-
-

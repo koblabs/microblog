@@ -1,8 +1,8 @@
-"""database init
+"""database initialization
 
-Revision ID: a8180af88f58
+Revision ID: fd8c1ea55ac8
 Revises: 
-Create Date: 2021-05-09 11:06:57.012989
+Create Date: 2021-05-09 12:23:03.579983
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a8180af88f58'
+revision = 'fd8c1ea55ac8'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -53,6 +53,19 @@ def upgrade():
     )
     op.create_index(op.f('ix_message_created_on'), 'message', ['created_on'], unique=False)
     op.create_index(op.f('ix_message_updated_on'), 'message', ['updated_on'], unique=False)
+    op.create_table('notification',
+    sa.Column('created_on', sa.DateTime(), nullable=True),
+    sa.Column('updated_on', sa.DateTime(), nullable=True),
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=128), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('payload', sa.Text(), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_notification_created_on'), 'notification', ['created_on'], unique=False)
+    op.create_index(op.f('ix_notification_name'), 'notification', ['name'], unique=False)
+    op.create_index(op.f('ix_notification_updated_on'), 'notification', ['updated_on'], unique=False)
     op.create_table('post',
     sa.Column('created_on', sa.DateTime(), nullable=True),
     sa.Column('updated_on', sa.DateTime(), nullable=True),
@@ -73,6 +86,10 @@ def downgrade():
     op.drop_index(op.f('ix_post_updated_on'), table_name='post')
     op.drop_index(op.f('ix_post_created_on'), table_name='post')
     op.drop_table('post')
+    op.drop_index(op.f('ix_notification_updated_on'), table_name='notification')
+    op.drop_index(op.f('ix_notification_name'), table_name='notification')
+    op.drop_index(op.f('ix_notification_created_on'), table_name='notification')
+    op.drop_table('notification')
     op.drop_index(op.f('ix_message_updated_on'), table_name='message')
     op.drop_index(op.f('ix_message_created_on'), table_name='message')
     op.drop_table('message')

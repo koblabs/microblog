@@ -1,4 +1,4 @@
-import jwt
+import jwt, json
 
 from datetime import datetime
 from hashlib import md5
@@ -113,6 +113,7 @@ class  User(UserMixin, CRUDMixin, CreateUpdateTimesMixin, db.Model):
                                         foreign_keys="Message.recipient_id",
                                         backref="recipient", lazy="dynamic")
     messages_last_read = db.Column(db.DateTime)
+    notifications = db.relationship("Notification", backref="user", lazy="dynamic")
 
     def __repr__(self):
         return f"<User {self.username}>"
@@ -168,10 +169,16 @@ class  User(UserMixin, CRUDMixin, CreateUpdateTimesMixin, db.Model):
             return
         return User.query.get(id)
 
-    def new_message(self):
+    def new_messages(self):
         last_read = self.messages_last_read or datetime(1900, 1, 1)
         return Message.query.filter_by(recipient=self).filter(
             Message.created_on > last_read).count()
+
+    def add_notification(self, name, data):
+        self.notifications.filter_by(name=name).delete()
+        n = Notification(name=name, payload=json.dumps(data), user=self)
+        db.session.add(n)
+        return n
 
 
 class Post(CRUDMixin, CreateUpdateTimesMixin, SearchableMixin, db.Model):
@@ -194,6 +201,19 @@ class Message(CRUDMixin, CreateUpdateTimesMixin, db.Model):
 
     def __repr__(self):
         return f"<Message {self.body}"
+
+
+class Notification(CRUDMixin, CreateUpdateTimesMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    payload = db.Column(db.Text)
+
+    def __repr__(self):
+        return f"<Notification {self.name}"
+
+    def get_data(self):
+        return json.loads(str(self.payload))
 
 
 db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
