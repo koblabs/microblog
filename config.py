@@ -29,5 +29,8 @@ class Config(object):
     MS_TRANSLATOR_REGION = environ.get("MS_TRANSLATOR_REGION") or "eastus2"
 
     ELASTICSEARCH_URL = environ.get("ELASTICSEARCH_URL")
+    REDIS_URL = environ.get("REDIS_URL") or "redis://"
 
     LOG_TO_STDOUT = environ.get("LOG_TO_STDOUT")
+
+    EXPORT_TASK_QUEUE = environ.get("EXPORT_TASK_QUEUE") or "microblog-tasks"
