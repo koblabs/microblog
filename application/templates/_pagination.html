@@ -2,12 +2,14 @@
     <ul class="pager">
         <li class="previous{% if not prev_page %} disabled{% endif %}">
             <a href="{{ prev_page or '#' }}">
-                <span aria-hidden="true">&larr;</span> Newer posts
+                <span aria-hidden="true">&larr;</span>
+                {{ _("Newer %(value)s", value=value) }}
             </a>
         </li>
         <li class="next{% if not next_page %} disabled{% endif %}">
             <a href="{{ next_page or '#' }}">
-                Older posts <span aria-hidden="true">&rarr;</span>
+                {{ _("Older %(value)s", value=value) }}
+                <span aria-hidden="true">&rarr;</span>
             </a>
         </li>
     </ul>

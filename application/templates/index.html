@@ -10,5 +10,6 @@
     {% for post in posts %}
         {% include '_post.html' %}
     {% endfor %}
+    {% set value="posts" %}
     {% include "_pagination.html" %}
 {% endblock %}

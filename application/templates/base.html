@@ -1,7 +1,7 @@
 {% extends 'bootstrap/base.html' %}
 
 {% block title %}
-    {% if title %}{{ title }} - Microblog{% else %}Welcome to Microblog{% endif %}
+    {% if title %}{{ title }} - Microblog{% else %}{{ _("Welcome to Microblog") }}{% endif %}
 {% endblock %}
 
 {% block navbar %}
@@ -19,15 +19,46 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url_for('main.index') }}">Home</a></li>
-                    <li><a href="{{ url_for('main.explore') }}">Explore</a></li>
+                    <li>
+                        <a href="{{ url_for('main.index') }}">
+                            {{ _("Home") }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('main.explore') }}">
+                            {{ _("Explore") }}
+                        </a>
+                    </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_anonymous %}
-                    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                    <li>
+                        <a href="{{ url_for('auth.login') }}">
+                            {{ _("Login") }}
+                        </a>
+                    </li>
                     {% else %}
-                    <li><a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a></li>
-                    <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                    <li>
+                        <a href="{{ url_for('main.messages') }}">
+                            {{ _("Messages") }}
+                            {% set new_messages = current_user.new_messages() %}
+                            <span id="message_count" class="badge"
+                                  style="visibility: {% if new_messages %}visible
+                                                     {% else %}hidden {% endif %}">
+                                {{ new_messages }}
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('main.user', username=current_user.username) }}">
+                            {{ _("Profile") }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('auth.logout') }}">
+                            {{ _("Logout") }}
+                        </a>
+                    </li>
                     {% endif %}
                 </ul>
                 {% if g.search_form %}
@@ -44,6 +75,18 @@
 
 {% block content %}
     <div class="container">
+        {% if current_user.is_authenticated %}
+        {% with tasks = current_user.get_tasks_in_progress() %}
+        {% if tasks %}
+            {% for task in tasks %}
+            <div class="alert alert-success" role="alert">
+                {{ task.description }}
+                <span id="{{ task.id }}-progress">{{ task.get_progress() }}</span>%
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+        {% endif %}
         {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}
@@ -112,7 +155,41 @@
                         element.popover("destroy");
                     }
                 }
-            )
-        })
+            );
+        });
+
+        function set_message_count(n) {
+            $("#message_count").text(n);
+            $("#message_count").css("visibility", n ? "visible" : "hidden");
+        }
+
+        function set_task_progress(task_id, progress) {
+            $("#" + task_id + "-progress").text(progress);
+        }
+
+        {% if current_user.is_authenticated %}
+        $(function() {
+            var since = 0;
+            setInterval(function() {
+                $.ajax("{{ url_for('main.notifications') }}?since=" + since).done(
+                    function(notifications) {
+                        for (var i = 0; i < notifications.length; i++) {
+                            switch (notifications[i].name) {
+                                case "unread_message_count":
+                                    set_message_count(notifications[i].data);
+                                    break;
+                                case "task_progress":
+                                    set_task_progress(
+                                        notifications[i].data.task_id,
+                                        notifications[i].data.progress);
+                                    break;
+                            }
+                            since = notifications[i].timestamp;
+                        }
+                    }
+                );
+            }, 10000);
+        });
+        {% endif %}
     </script>
 {% endblock %}
