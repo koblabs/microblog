@@ -1,6 +1,7 @@
-import os
+import os, rq
 import logging
 
+from redis import Redis
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -45,6 +46,12 @@ def create_app(config_class=Config):
 
     app.elasticsearch = Elasticsearch([app.config["ELASTICSEARCH_URL"]]) \
         if app.config["ELASTICSEARCH_URL"] else None
+    app.redis = Redis.from_url(app.config["REDIS_URL"])
+    app.task_queue = rq.Queue(app.config["EXPORT_TASK_QUEUE"],
+                              connection=app.redis)
+
+    from application.main import bp as main_bp
+    app.register_blueprint(main_bp)
 
     from application.errors import bp as error_bp
     app.register_blueprint(error_bp)
@@ -52,8 +59,8 @@ def create_app(config_class=Config):
     from application.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix="/auth")
 
-    from application.main import bp as main_bp
-    app.register_blueprint(main_bp)
+    from application.api import bp as api_bp
+    app.register_blueprint(api_bp, url_prefix="/api")
 
     if not app.debug and not app.testing:
         if app.config["MAIL_SERVER"]:
