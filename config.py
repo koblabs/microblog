@@ -2,7 +2,7 @@ from os import environ, path
 from dotenv import load_dotenv
 
 basedir = path.abspath(path.dirname(__file__))
-load_dotenv(path.join(basedir, '.env'))
+load_dotenv(path.join(basedir, ".env"))
 
 class Config(object):
     SECRET_KEY = environ.get("SECRET_KEY") or "secret_key"
@@ -22,7 +22,7 @@ class Config(object):
     POSTS_PER_PAGE = 10
     MESSAGES_PER_PAGE = 15
 
-    LANGUAGES = ['en', 'es']
+    LANGUAGES = ["en", "es"]
     #LANGUAGES = [en-US, en-GB, en-CA]
 
     MS_TRANSLATOR_KEY = environ.get("MS_TRANSLATOR_KEY")
