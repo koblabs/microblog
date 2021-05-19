@@ -1,0 +1,234 @@
+# Spanish translations for PROJECT.
+# Copyright (C) 2021 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2021-05-18 11:44-0430\n"
+"PO-Revision-Date: 2021-05-18 11:44-0430\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: application/__init__.py:32
+msgid "Kindly log in to access this page."
+msgstr ""
+
+#: application/translate.py:12
+msgid "Error: the translation service is not configured."
+msgstr ""
+
+#: application/translate.py:21
+msgid "Error: the translation service failed."
+msgstr ""
+
+#: application/auth/forms.py:18 application/main/forms.py:23
+msgid "Username"
+msgstr ""
+
+#: application/auth/forms.py:19 application/auth/forms.py:38
+msgid "Email"
+msgstr ""
+
+#: application/auth/forms.py:20 application/auth/forms.py:43
+msgid "Password"
+msgstr ""
+
+#: application/auth/forms.py:21 application/auth/forms.py:44
+msgid "Confirm password"
+msgstr ""
+
+#: application/auth/forms.py:24 application/auth/routes.py:26
+msgid "Register"
+msgstr ""
+
+#: application/auth/forms.py:29
+msgid "Username taken, please use a different username"
+msgstr ""
+
+#: application/auth/forms.py:34
+msgid "Email taken, please use a different email"
+msgstr ""
+
+#: application/auth/forms.py:39
+msgid "Request password reset"
+msgstr ""
+
+#: application/auth/forms.py:47
+msgid "Reset password"
+msgstr ""
+
+#: application/auth/routes.py:24
+msgid "You are now a registered user!"
+msgstr ""
+
+#: application/auth/routes.py:37
+msgid "Invalid username or password"
+msgstr ""
+
+#: application/auth/routes.py:44
+msgid "Sign In"
+msgstr ""
+
+#: application/auth/routes.py:62
+msgid "Please check your email for instructions to reset password"
+msgstr ""
+
+#: application/auth/routes.py:64
+msgid "Reset Password"
+msgstr ""
+
+#: application/auth/routes.py:79
+msgid "Your password have been reset."
+msgstr ""
+
+#: application/main/forms.py:12 application/main/routes.py:41
+msgid "Search"
+msgstr ""
+
+#: application/main/forms.py:24
+msgid "About me"
+msgstr ""
+
+#: application/main/forms.py:25
+msgid "Save"
+msgstr ""
+
+#: application/main/forms.py:35
+msgid "Username already taken"
+msgstr ""
+
+#: application/main/forms.py:42
+msgid "Say something"
+msgstr ""
+
+#: application/main/forms.py:44 application/main/forms.py:50
+msgid "Submit"
+msgstr ""
+
+#: application/main/forms.py:48
+msgid "Message"
+msgstr ""
+
+#: application/main/routes.py:75 application/templates/base.html:24
+msgid "Home"
+msgstr ""
+
+#: application/main/routes.py:110
+msgid "Edit Profile"
+msgstr ""
+
+#: application/main/routes.py:164 application/templates/base.html:29
+msgid "Explore"
+msgstr ""
+
+#: application/main/routes.py:188
+msgid "Message sent"
+msgstr ""
+
+#: application/main/routes.py:190
+msgid "Send Message"
+msgstr ""
+
+#: application/main/routes.py:229
+msgid "An export task is currently in progress"
+msgstr ""
+
+#: application/main/routes.py:231
+msgid "Exporting posts..."
+msgstr ""
+
+#: application/templates/_pagination.html:6
+#, python-format
+msgid "Newer %(value)s"
+msgstr ""
+
+#: application/templates/_pagination.html:11
+#, python-format
+msgid "Older %(value)s"
+msgstr ""
+
+#: application/templates/_post.html:16
+#, python-format
+msgid "%(username)s said %(when)s"
+msgstr ""
+
+#: application/templates/_post.html:27
+msgid "Translate"
+msgstr ""
+
+#: application/templates/base.html:4
+msgid "Welcome to Microblog"
+msgstr ""
+
+#: application/templates/base.html:37
+msgid "Login"
+msgstr ""
+
+#: application/templates/base.html:43 application/templates/messages.html:4
+msgid "Messages"
+msgstr ""
+
+#: application/templates/base.html:54
+msgid "Profile"
+msgstr ""
+
+#: application/templates/base.html:59
+msgid "Logout"
+msgstr ""
+
+#: application/templates/base.html:118
+msgid "Error: Could not contact server."
+msgstr ""
+
+#: application/templates/search.html:4
+msgid "Search Results"
+msgstr ""
+
+#: application/templates/send_message.html:5
+#, python-format
+msgid "Send Message to %(recipient)s"
+msgstr ""
+
+#: application/templates/user.html:15
+msgid "Send private message"
+msgstr ""
+
+#: application/templates/user.html:22
+msgid "Edit your profile"
+msgstr ""
+
+#: application/templates/user.html:28
+msgid "Export your posts"
+msgstr ""
+
+#: application/templates/user_popup.html:10
+msgid "Last seen on"
+msgstr ""
+
+#: application/templates/user_popup.html:14
+#, python-format
+msgid "%(count)d followers"
+msgstr ""
+
+#: application/templates/user_popup.html:15
+#, python-format
+msgid "%(count)d following"
+msgstr ""
+
+#: application/templates/user_popup.html:22
+msgid "Follow"
+msgstr ""
+
+#: application/templates/user_popup.html:29
+msgid "Unfollow"
+msgstr ""
+
