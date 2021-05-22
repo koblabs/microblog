@@ -3,7 +3,8 @@ import unittest
 from datetime import datetime, timedelta
 
 from application import create_app, db
-from application.models import User, Post
+from application.models.user import User
+from application.models.post import Post
 
 from config import Config
 
