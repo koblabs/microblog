@@ -5,7 +5,7 @@ from flask_babel import _, lazy_gettext as _l
 from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, Length
 
-from application.models import User
+from application.models.user import User
 
 
 class SearchForm(FlaskForm):
