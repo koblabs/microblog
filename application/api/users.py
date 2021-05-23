@@ -5,7 +5,7 @@ from flask import jsonify, request, url_for, abort
 from application import db
 from application.api import bp
 from application.api.errors import bad_request
-from application.models import User
+from application.models.user import User
 from application.api.auth import token_auth
 
 
