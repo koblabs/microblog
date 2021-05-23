@@ -5,7 +5,9 @@ from flask import render_template
 from rq import get_current_job
 
 from application import create_app, db
-from application.models import Task, User, Post
+from application.models.task import Task
+from application.models.user import User
+from application.models.post import Post
 from application.email import send_mail
 
 
