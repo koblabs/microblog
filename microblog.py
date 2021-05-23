@@ -1,5 +1,9 @@
 from application import create_app, db, cli
-from application.models import User, Post, Notification, Message, Task
+from application.models.user import User
+from application.models.post import Post
+from application.models.notification import Notification
+from application.models.message import Message
+from application.models.task import Task
 
 
 app = create_app()
