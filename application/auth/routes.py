@@ -8,7 +8,7 @@ from application import db
 from application.auth import bp
 from application.auth.forms import LoginForm, RegistrationForm, \
     ResetPasswordRequestForm, ResetPasswordForm
-from application.models import User
+from application.models.user import User
 from application.auth.email import send_password_reset_email
 
 
