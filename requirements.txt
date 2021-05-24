@@ -8,7 +8,7 @@ dnspython==2.1.0
 dominate==2.6.0
 elasticsearch==7.12.1
 email-validator==1.1.2
-Flask==1.1.2
+Flask==2.0.0
 Flask-Babel==2.0.0
 Flask-Bootstrap==3.3.7.1
 Flask-HTTPAuth==4.3.0
@@ -22,11 +22,11 @@ greenlet==1.0.0
 guess-language-spirit==0.5.3
 httpie==2.4.0
 idna==2.10
-itsdangerous==1.1.0
-Jinja2==2.11.3
+itsdangerous==2.0.1
+Jinja2==3.0.1
 langdetect==1.0.8
 Mako==1.1.4
-MarkupSafe==1.1.1
+MarkupSafe==2.0.1
 pkg-resources==0.0.0
 pyenchant==3.2.0
 Pygments==2.9.0
@@ -44,5 +44,5 @@ six==1.15.0
 SQLAlchemy==1.4.11
 urllib3==1.26.4
 visitor==0.1.3
-Werkzeug==1.0.1
+Werkzeug==2.0.1
 WTForms==2.3.3
