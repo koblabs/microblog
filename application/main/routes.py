@@ -11,7 +11,10 @@ from application import db
 from application.main.forms import EditProfileForm, PostForm, \
     EmptyForm, SearchForm, MessageForm
 from application.translate import translate
-from application.models import User, Post, Message, Notification
+from application.models.user import User
+from application.models.post import Post
+from application.models.notification import Notification
+from application.models.message import Message
 from application.main import bp
 
 
