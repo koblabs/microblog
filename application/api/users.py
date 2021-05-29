@@ -35,6 +35,17 @@ def get_followers(id):
     return jsonify(data)
 
 
+@bp.route("/users/<int:id>/posts", methods=["GET"])
+@token_auth.login_required
+def get_user_posts(id):
+    user = User.query.get_or_404(id)
+    page = request.args.get("page", 1, type=int)
+    per_page = min(request.args.get("per_page", 10, type=int), 100)
+    data = User.to_collection_dict(user.posts, page, per_page,
+                                   "api.get_user_posts", id=id)
+    return jsonify(data)
+
+
 @bp.route("/users/<int:id>/following", methods=["GET"])
 @token_auth.login_required
 def get_following(id):
