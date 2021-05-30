@@ -5,9 +5,15 @@ from flask import jsonify, request, url_for, abort
 from application import db
 from application.api import bp
 from application.api.errors import bad_request
-from application.models.user import User
+# from application.models.user import User
 from application.models.post import Post
 from application.api.auth import token_auth
+
+
+@bp.route("/posts/<int:id>", methods=["GET"])
+@token_auth.login_required
+def get_post(id):
+    return jsonify(Post.query.get_or_404(id).to_dict())
 
 
 @bp.route("/posts", methods=["GET"])
