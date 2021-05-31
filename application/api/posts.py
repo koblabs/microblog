@@ -7,17 +7,17 @@ from application.api import bp
 from application.api.errors import bad_request
 # from application.models.user import User
 from application.models.post import Post
-from application.api.auth import token_auth
+# from application.api.auth import token_auth
 
 
 @bp.route("/posts/<int:id>", methods=["GET"])
-@token_auth.login_required
+# @token_auth.login_required
 def get_post(id):
     return jsonify(Post.query.get_or_404(id).to_dict())
 
 
 @bp.route("/posts", methods=["GET"])
-@token_auth.login_required
+# @token_auth.login_required
 def get_posts():
     page = request.args.get("page", 1, type=int)
     per_page = min(request.args.get("per_page", 10, type=int), 100)
