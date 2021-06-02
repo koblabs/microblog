@@ -11,13 +11,11 @@ from application.models.post import Post
 
 
 @bp.route("/posts/<int:id>", methods=["GET"])
-# @token_auth.login_required
 def get_post(id):
     return jsonify(Post.query.get_or_404(id).to_dict())
 
 
 @bp.route("/posts", methods=["GET"])
-# @token_auth.login_required
 def get_posts():
     page = request.args.get("page", 1, type=int)
     per_page = min(request.args.get("per_page", 10, type=int), 100)
